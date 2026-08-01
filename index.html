@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Snake Fruit</title>
+<style>
+body{
+    margin:0;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:#111;
+    color:white;
+    font-family:Arial;
+}
+.box{
+    text-align:center;
+}
+h1{
+    color:#4cff4c;
+}
+.info{
+    display:flex;
+    justify-content:space-between;
+    margin:10px 0;
+}
+canvas{
+    background:#080808;
+    border:3px solid #4cff4c;
+    border-radius:8px;
+}
+button{
+    margin-top:15px;
+    padding:10px 25px;
+    border:0;
+    border-radius:8px;
+    cursor:pointer;
+    background:#4cff4c;
+    font-weight:bold;
+}
+#msg{
+    height:25px;
+    margin-top:10px;
+    color:#ffd700;
+}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+<h1>🐍 Snake Fruit 🍎</h1>
+
+<div class="info">
+<div>Pontos: <span id="score">0</span></div>
+<div>Recorde: <span id="high">0</span></div>
+</div>
+
+<canvas id="game" width="400" height="400"></canvas>
+
+<div id="msg">
+Use WASD ou setas
+</div>
+
+<button onclick="start()">Reiniciar</button>
+
+</div>
+
+
+<script>
+
+const canvas=document.getElementById("game");
+const ctx=canvas.getContext("2d");
+
+const size=20;
+const cells=canvas.width/size;
+
+let snake,fruit,dir,next,score,speed,timer,running;
+
+let high=localStorage.getItem("snakeHigh")||0;
+document.getElementById("high").innerHTML=high;
+
+
+function start(){
+
+snake=[
+{x:10,y:10}
+];
+
+dir={x:1,y:0};
+next=dir;
+
+score=0;
+speed=120;
+running=true;
+
+document.getElementById("score").innerHTML=score;
+document.getElementById("msg").innerHTML="";
+
+spawn();
+
+clearInterval(timer);
+timer=setInterval(loop,speed);
+
+}
+
+
+function spawn(){
+
+let ok=false;
+
+while(!ok){
+
+fruit={
+x:Math.floor(Math.random()*cells),
+y:Math.floor(Math.random()*cells),
+emoji:["🍎","🍓","🍌","🍇","🍒"]
+[Math.floor(Math.random()*5)]
+};
+
+ok=!snake.some(
+s=>s.x==fruit.x&&s.y==fruit.y
+);
+
+}
+
+}
+
+
+function loop(){
+
+dir=next;
+
+let head={
+x:snake[0].x+dir.x,
+y:snake[0].y+dir.y
+};
+
+
+if(
+head.x<0||
+head.y<0||
+head.x>=cells||
+head.y>=cells||
+snake.some(
+s=>s.x==head.x&&s.y==head.y
+)
+){
+
+gameOver();
+return;
+
+}
+
+
+snake.unshift(head);
+
+
+if(
+head.x==fruit.x &&
+head.y==fruit.y
+){
+
+score++;
+
+document.getElementById("score").innerHTML=score;
+
+if(score>high){
+
+high=score;
+localStorage.setItem("snakeHigh",high);
+document.getElementById("high").innerHTML=high;
+
+}
+
+spawn();
+
+if(speed>50){
+
+speed-=5;
+
+clearInterval(timer);
+timer=setInterval(loop,speed);
+
+}
+
+}else{
+
+snake.pop();
+
+}
+
+
+draw();
+
+}
+
+
+
+function draw(){
+
+ctx.fillStyle="#080808";
+ctx.fillRect(0,0,400,400);
+
+
+ctx.strokeStyle="#151515";
+
+for(let i=0;i<cells;i++){
+
+ctx.beginPath();
+ctx.moveTo(i*size,0);
+ctx.lineTo(i*size,400);
+ctx.stroke();
+
+ctx.beginPath();
+ctx.moveTo(0,i*size);
+ctx.lineTo(400,i*size);
+ctx.stroke();
+
+}
+
+
+snake.forEach((p,i)=>{
+
+ctx.fillStyle=i==0?"#9cff9c":"#00cc44";
+
+ctx.fillRect(
+p.x*size,
+p.y*size,
+size-2,
+size-2
+);
+
+});
+
+
+ctx.font="20px Arial";
+ctx.fillText(
+fruit.emoji,
+fruit.x*size,
+fruit.y*size+18
+);
+
+}
+
+
+
+function gameOver(){
+
+running=false;
+
+clearInterval(timer);
+
+document.getElementById("msg").innerHTML=
+"Game Over! Pressione Reiniciar";
+
+}
+
+
+
+document.addEventListener(
+"keydown",
+e=>{
+
+let k=e.key.toLowerCase();
+
+if(
+(k=="arrowup"||k=="w")&&dir.y!=1
+)
+next={x:0,y:-1};
+
+if(
+(k=="arrowdown"||k=="s")&&dir.y!=-1
+)
+next={x:0,y:1};
+
+if(
+(k=="arrowleft"||k=="a")&&dir.x!=1
+)
+next={x:-1,y:0};
+
+if(
+(k=="arrowright"||k=="d")&&dir.x!=-1
+)
+next={x:1,y:0};
+
+
+});
+
+
+start();
+
+</script>
+
+</body>
+</html>
