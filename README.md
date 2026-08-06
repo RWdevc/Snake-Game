@@ -21,17 +21,17 @@ O jogador controla uma cobra que deve coletar frutas para aumentar sua pontuaç�
 
 ## ✨ Funcionalidades
 
-✅ Movimento da cobra em tempo real.
-✅ Controle por teclado (Setas e WASD).
-✅ Sistema de pontuação.
-✅ Recorde salvo automaticamente no navegador (`localStorage`).
-✅ Frutas aleatórias com diferentes representações visuais.
-✅ Crescimento da cobra ao coletar frutas.
-✅ Aumento progressivo da velocidade.
-✅ Sistema de Game Over.
-✅ Botão de reinício.
-✅ Interface responsiva.
-✅ Renderização utilizando Canvas API.
+- ✅ Movimento da cobra em tempo real.
+- ✅ Controle por teclado (Setas e WASD).
+- ✅ Sistema de pontuação.
+- ✅ Recorde salvo automaticamente no navegador (`localStorage`).
+- ✅ Frutas aleatórias com diferentes representações visuais.
+- ✅ Crescimento da cobra ao coletar frutas.
+- ✅ Aumento progressivo da velocidade.
+- ✅ Sistema de Game Over.
+- ✅ Botão de reinício.
+- ✅ Interface responsiva.
+- ✅ Renderização utilizando Canvas API.
 
 ---
 
